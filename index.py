@@ -24,7 +24,7 @@ app = FastAPI()
 @app.get("/")
 async def root():
     # TODO include the user's name if they are logged in
-    return {"message": "Hello {}".format("World")}
+        return {"message": "Hello {self.name}".format("World")}
 
 
 @app.post("/user")
@@ -33,15 +33,21 @@ async def create_new_user(*, user: User):
       session.add(user)
       session.commit()
     # TODO return the User ID
-    return {"message": "User created"}
+    return user.id
+
+    # return {"message": "User created"}
     
 @app.get("/user/{id}")
 async def get_user(id: int):
   with Session(engine) as session:
      # TODO return the user based on the ID (and an error if not)
+    #  I will first create an if statement that check if the id of the 
+    # user is equal to the id we have else return an error if it doesnt exist
      statement = select(User).where(User.name == id)
-     user = session.exec(statement).first()
-     return {"user": user}
+     if statement:
+        return {"user": User.name}
+     else:
+         return "User not found"
 
 @app.get("/api/webhooks")
 async def handle_hook(*, event: Any):
