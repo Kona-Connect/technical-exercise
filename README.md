@@ -11,7 +11,7 @@ This is a single-file Python web server using the FastAPI web framework and the 
 
 This project is setup using `Pipenv`:
 1. `pip install pipenv`
-2. `pipenv install`
+2. `pipenv install --skip-lock`
 3. `pipenv run uvicorn index:app --reload`
 
 ### Submission
