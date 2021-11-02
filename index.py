@@ -3,7 +3,7 @@ from __future__ import print_function
 import time
 from typing import Any, Dict, Optional
 
-from fastapi import FastAPI
+from fastapi import FastAPI, HTTPException
 
 from typing import Optional
 
@@ -38,9 +38,10 @@ async def create_new_user(*, user: User):
 @app.get("/user/{id}")
 async def get_user(id: int):
   with Session(engine) as session:
-     # TODO return the user based on the ID (and an error if not)
-     statement = select(User).where(User.name == id)
+     statement = select(User).where(User.id == id)
      user = session.exec(statement).first()
+     if user is None:
+         raise HTTPException(status_code=404, detail="User not found")
      return {"user": user}
 
 @app.get("/api/webhooks")
