@@ -3,7 +3,8 @@ from __future__ import print_function
 import time
 from typing import Any, Dict, Optional
 
-from fastapi import FastAPI, HTTPException
+from fastapi import Depends, FastAPI, HTTPException
+from fastapi.security import HTTPBasic, HTTPBasicCredentials
 
 from typing import Optional
 
@@ -19,11 +20,14 @@ engine = create_engine("sqlite:///database.db")
 SQLModel.metadata.create_all(engine)
 # Create an instance of the API class
 app = FastAPI()
+security = HTTPBasic(auto_error=False)
 
+# NOTE: This authentication implementation is not complete nor robust. It
+# is only meant to be used as an example.
 @app.get("/")
-async def root():
-    # TODO include the user's name if they are logged in
-    return {"message": "Hello {}".format("World")}
+async def root(credentials: HTTPBasicCredentials = Depends(security)):
+    username = credentials.username if credentials else "World"
+    return {"message": "Hello {}".format(username)}
 
 
 @app.post("/user")
