@@ -32,8 +32,7 @@ async def create_new_user(*, user: User):
     with Session(engine) as session:
       session.add(user)
       session.commit()
-    # TODO return the User ID
-    return {"message": "User created"}
+      return {"message": "User with ID {} created".format(user.id)}
     
 @app.get("/user/{id}")
 async def get_user(id: int):
