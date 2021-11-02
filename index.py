@@ -10,7 +10,6 @@ from typing import Optional
 from sqlmodel import Field, Session, SQLModel, create_engine, select
 
 class User(SQLModel, table=True):
-    # TODO change the default value to the timestamp that the user is created
     id: Optional[int] = Field(default=None, primary_key=True)
     name: str
     secret_name: str
@@ -30,6 +29,8 @@ async def root():
 @app.post("/user")
 async def create_new_user(*, user: User):
     with Session(engine) as session:
+      if user.id is None:
+        user.id = int(time.time())
       session.add(user)
       session.commit()
       return {"message": "User with ID {} created".format(user.id)}
