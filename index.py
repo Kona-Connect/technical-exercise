@@ -28,6 +28,7 @@ async def root(credentials: HTTPBasicCredentials = Depends(security)):
 
 @app.post("/user")
 async def create_new_user(*, user: User):
+# TODO: Should handle the case where the user already exists
     with Session(engine) as session:
         if user.id is None:
             user.id = int(time.time())
@@ -44,6 +45,8 @@ async def get_user(id: int):
             raise HTTPException(status_code=404, detail="User not found")
         return {"user": user}
 
+# TODO: The purpose of this webhook is unclear and its implementation is
+# incomplete
 @app.get("/api/webhooks")
 async def handle_hook(*, event: Any):
     id = event.payload.conversation.id
